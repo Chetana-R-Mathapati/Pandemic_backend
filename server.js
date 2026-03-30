@@ -233,8 +233,7 @@ await Alert.create({
         // 3. SMS notification
         if (user.phone) {
           try {
-            await sendSMS("+91" + user.phone, smsMessage);
-            totalSMS++;
+         
             console.log(`      ✅ SMS sent to +91${user.phone}`);
           } catch (smsErr) {
             console.error(`      ❌ SMS failed:`, smsErr.message);
@@ -317,10 +316,7 @@ app.post("/api/signup", async (req, res) => {
     });
 
     await newUser.save();
-await sendSMS(
-  "+91" + phone,
-  `Welcome ${username}! You are registered in ${location}`
-);
+
     res.json({ message: "Signup successful", role });
 
   } catch (err) {
@@ -1427,7 +1423,7 @@ async function sendRiskAlerts() {
         // 1. SMS notification
         if (user.phone) {
           try {
-            await sendSMS("+91" + user.phone, smsText);
+           
             totalSMS++;
           } catch (smsErr) {
             console.error(`SMS failed for ${user.username}:`, smsErr.message);
@@ -1531,11 +1527,7 @@ app.post("/api/upload-dataset", uploadMiddleware.single("dataset"), async (req, 
       for (const r of waitlisted) {
         const u = await User.findOne({ username: r.username });
         if (u?.phone) {
-          await sendSMS(
-            "+91" + u.phone,
-            `✅ Good news, ${u.username}! "${r.vaccine}" is now available in ${region}. ` +
-            `Visit the PandemicAI portal to confirm your request. — PandemicAI`
-          );
+        
         }
         r.status = "notified";
         await r.save();
@@ -1624,8 +1616,7 @@ app.put("/api/vaccine-inventory/:id", async (req, res) => {
       const wl = await VaccineRequest.find({ vaccine: inv.name, status: "waitlisted" });
       for (const r of wl) {
         const u = await User.findOne({ username: r.username });
-        if (u?.phone) await sendSMS("+91" + u.phone,
-          `✅ "${inv.name}" is back in stock. Visit the PandemicAI portal to confirm. — PandemicAI`);
+        if (u?.phone) 
         r.status = "notified"; await r.save();
       }
       return res.json({ message: `Stock updated ✅ — ${wl.length} user(s) notified`, notified: wl.length });
@@ -1663,8 +1654,7 @@ app.post("/api/vaccine-restock-region", async (req, res) => {
     let notified = 0;
     for (const r of wl) {
       const u = await User.findOne({ username: r.username });
-      if (u?.phone) await sendSMS("+91" + u.phone,
-        `✅ "${vaccine}" is now available in ${region}. Visit the portal to confirm. — PandemicAI`);
+      if (u?.phone) 
       r.status = "notified"; await r.save();
       notified++;
     }
@@ -1697,8 +1687,7 @@ app.post("/api/vaccine-request", async (req, res) => {
       const inv = await VaccineInventory.findOne({ name: vaccine });
       if (inv && inv.stock >= Number(doses)) { inv.stock -= Number(doses); await inv.save(); }
       await VaccineRequest.create({ username, vaccine, region, doses, notes, status: "available" });
-      if (user?.phone) await sendSMS("+91" + user.phone,
-        `✅ Your ${doses} dose(s) of "${vaccine}" in ${region} are confirmed. Visit your nearest centre. — PandemicAI`);
+      if (user?.phone) 
       return res.json({
         availability: "Yes",
         message: `✅ Vaccine is available in ${region}! Your request for ${doses} dose(s) of "${vaccine}" has been confirmed. SMS sent.`,
@@ -1706,8 +1695,7 @@ app.post("/api/vaccine-request", async (req, res) => {
 
     } else if (regionAvail === "Partial") {
       await VaccineRequest.create({ username, vaccine, region, doses, notes, status: "partial" });
-      if (user?.phone) await sendSMS("+91" + user.phone,
-        `⚠️ "${vaccine}" has limited stock in ${region}. Your request is logged — team will confirm soon. — PandemicAI`);
+      
       return res.json({
         availability: "Partial",
         message: `⚠️ "${vaccine}" has partial availability in ${region}. Your request is logged and our team will confirm your doses soon. SMS sent.`,
@@ -1715,8 +1703,7 @@ app.post("/api/vaccine-request", async (req, res) => {
 
     } else {
       await VaccineRequest.create({ username, vaccine, region, doses, notes, status: "waitlisted" });
-      if (user?.phone) await sendSMS("+91" + user.phone,
-        `⚠️ "${vaccine}" is out of stock in ${region}. Added to waitlist — you'll be SMS-notified when restocked. — PandemicAI`);
+      if (user?.phone) 
       return res.json({
         availability: "No",
         message: `❌ "${vaccine}" is currently out of stock in ${region}. You've been added to the waitlist and will be notified via SMS once the admin restocks this region.`,
