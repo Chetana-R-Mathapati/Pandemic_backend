@@ -43,7 +43,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 /* ------------------ DATABASE CONNECTION ------------------ */
 
-mongoose.connect("mongodb://127.0.0.1:27017/pandemic_ai")
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch((err) => console.log("MongoDB Error:", err));
 
@@ -1044,10 +1044,10 @@ app.post("/api/auto-alerts", async (req, res) => {
 
 
 
-server.listen(5000, () => {
-  console.log("🚀 Server + Socket running on port 5000");
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server + Socket running on port ${PORT}`);
 });
-
 
 // Add this near the top of server.js where you have other requires
 const socketio = require("socket.io");
