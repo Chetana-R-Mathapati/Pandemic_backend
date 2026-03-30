@@ -9,19 +9,14 @@ const fs = require("fs");
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    if (
-      origin.includes("vercel.app") ||
-      origin === "http://localhost:3000"
-    ) {
-      return callback(null, true);
-    }
-    callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true
-}));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
+app.use(cors());
 
 require("dotenv").config();
 const twilio = require("twilio");
@@ -47,20 +42,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: function(origin, callback) {
-      if (!origin) return callback(null, true);
-      if (
-        origin.includes("vercel.app") ||
-        origin === "http://localhost:3000"
-      ) {
-        return callback(null, true);
-      }
-      callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST"],
-    credentials: true
-  }
+  cors: { origin: "*", methods: ["GET", "POST"] }
 });
 // ✅ REPLACE Anthropic with Groq (free)
 const Groq = require("groq-sdk");
