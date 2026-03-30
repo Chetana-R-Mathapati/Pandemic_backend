@@ -10,11 +10,16 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: [
-    "https://pandemic-frontend.vercel.app",
-    "https://pandemic-frontend-9id87a502-chetanas-projects-98af6735.vercel.app",
-    "http://localhost:3000"
-  ],
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (
+      origin.includes("vercel.app") ||
+      origin === "http://localhost:3000"
+    ) {
+      return callback(null, true);
+    }
+    callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
@@ -43,11 +48,16 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "https://pandemic-frontend.vercel.app",
-      "https://pandemic-frontend-9id87a502-chetanas-projects-98af6735.vercel.app",
-      "http://localhost:3000"
-    ],
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        origin.includes("vercel.app") ||
+        origin === "http://localhost:3000"
+      ) {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST"],
     credentials: true
   }
