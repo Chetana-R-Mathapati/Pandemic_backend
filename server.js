@@ -43,6 +43,14 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch((err) => console.log("MongoDB Error:", err));
 
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err.message);
+  console.error(err.stack);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason);
+});
 
 /* ------------------ SCHEMAS ------------------ */
 
@@ -1038,7 +1046,9 @@ app.post("/api/auto-alerts", async (req, res) => {
   }
 });
 
-
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err.message);
+});
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
