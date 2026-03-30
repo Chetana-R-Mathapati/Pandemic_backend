@@ -19,24 +19,11 @@ app.use((req, res, next) => {
 app.use(cors());
 
 require("dotenv").config();
-const twilio = require("twilio");
 
-const client = twilio(
-  process.env.TWILIO_SID,
-  process.env.TWILIO_AUTH
-);
 
-async function sendSMS(phone, message) {
-  try {
-    await client.messages.create({
-      body: message,
-      from: process.env.TWILIO_PHONE,
-      to: phone
-    });
-  } catch (err) {
-    console.log("SMS Error:", err.message);
-  }
-}
+
+
+
 let userSockets = {};
 const http = require("http");
 const { Server } = require("socket.io");
