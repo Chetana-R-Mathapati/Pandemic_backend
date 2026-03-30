@@ -1073,7 +1073,7 @@ app.post("/api/auto-alerts", async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server + Socket running on port ${PORT}`);
+ console.log(`🚀 Server + Socket running on port ${PORT} - CORS FIXED`);
 });
 
 // Add this near the top of server.js where you have other requires
