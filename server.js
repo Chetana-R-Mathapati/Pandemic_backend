@@ -9,7 +9,14 @@ const fs = require("fs");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://pandemic-frontend.vercel.app",
+    "https://pandemic-frontend-9id87a502-chetanas-projects-98af6735.vercel.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
 
 require("dotenv").config();
 const twilio = require("twilio");
@@ -34,7 +41,17 @@ let userSockets = {};
 const http = require("http");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "https://pandemic-frontend.vercel.app",
+      "https://pandemic-frontend-9id87a502-chetanas-projects-98af6735.vercel.app",
+      "http://localhost:3000"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 // ✅ REPLACE Anthropic with Groq (free)
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
