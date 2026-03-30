@@ -1059,7 +1059,6 @@ server.listen(PORT, () => {
 });
 
 // Add this near the top of server.js where you have other requires
-const socketio = require("socket.io");
 
 // Modify the sendRegionAlerts function to be more comprehensive
 // ═══════════════════════════════════════════════════════════════════
