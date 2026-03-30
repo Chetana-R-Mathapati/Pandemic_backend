@@ -29,7 +29,11 @@ const http = require("http");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
+  transports: ["websocket"],
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 });
 // ✅ REPLACE Anthropic with Groq (free)
 const Groq = require("groq-sdk");
@@ -1051,10 +1055,9 @@ process.on('uncaughtException', (err) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
- console.log(`🚀 Server + Socket running on port ${PORT} - CORS FIXED`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server + Socket running on port ${PORT} - CORS FIXED`);
 });
-
 // Add this near the top of server.js where you have other requires
 
 // Modify the sendRegionAlerts function to be more comprehensive
